@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Little Universe For Parami ❤️</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#05030b;color:#fff;font-family:Montserrat,sans-serif;
+  overflow-x:hidden;
+}
+canvas#stars{position:fixed;inset:0;width:100%;height:100%;z-index:-3}
+.aurora{position:fixed;inset:-20%;z-index:-2;filter:blur(70px);opacity:.35;
+  background:radial-gradient(circle at 30% 30%,#a32976 0 10%,transparent 28%),
+             radial-gradient(circle at 70% 70%,#45258c 0 12%,transparent 30%);}
+.screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;position:relative}
+.glass{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(18px);box-shadow:0 25px 80px rgba(0,0,0,.45);
+  border-radius:28px;
+}
+.hero{text-align:center;max-width:900px}
+.kicker{letter-spacing:5px;text-transform:uppercase;font-size:11px;color:#e9a9d0;margin-bottom:25px}
+h1,h2,h3{font-family:"Cormorant Garamond",serif}
+.hero h1{font-size:clamp(60px,11vw,140px);line-height:.82;font-weight:500}
+.gradient{background:linear-gradient(90deg,#fff,#ffb7dc,#c9b4ff,#fff);background-size:300%;
+-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s linear infinite}
+@keyframes shine{to{background-position:300%}}
+.subtitle{margin:28px auto 35px;max-width:600px;color:#cfc7d8;line-height:1.9;font-weight:300}
+.btn{
+ border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;
+ padding:15px 27px;border-radius:999px;cursor:pointer;transition:.3s;font-family:inherit;
+}
+.btn:hover{transform:translateY(-3px);background:rgba(255,255,255,.15);box-shadow:0 10px 35px rgba(255,110,190,.2)}
+.scroll{position:absolute;bottom:25px;font-size:10px;letter-spacing:3px;color:#8d8596}
+.section{max-width:1100px;width:100%;padding:80px 25px}
+.center{text-align:center}
+.section h2{font-size:clamp(45px,7vw,80px);font-weight:500;margin-bottom:20px}
+.section-intro{color:#a9a1b0;max-width:650px;margin:0 auto 55px;line-height:1.8}
+.reveal{opacity:0;transform:translateY(35px);transition:1s ease}
+.reveal.show{opacity:1;transform:none}
+
+/* Mute Button Floating Style */
+#muteToggleBtn {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  z-index: 1000;
+  background-color: rgba(255, 111, 145, 0.2);
+  border: 1px solid rgba(255, 182, 217, 0.4);
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 30px;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 1px;
+}
+
+#muteToggleBtn:hover {
+  background-color: rgba(255, 111, 145, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(255, 111, 145, 0.4);
+}
+
+#muteToggleBtn:active {
+  transform: translateY(0);
+}
+
+/* Inline SVG Cake Container Styling */
+.cake-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  margin: 20px auto 10px;
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cake-svg {
+  width: 100%;
+  height: auto;
+  max-height: 320px;
+  filter: drop-shadow(0 10px 25px rgba(255, 105, 180, 0.3));
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+.flame {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.flame.lit {
+  opacity: 1;
+  animation: stationaryGlow 1.2s infinite alternate ease-in-out;
+}
+
+@keyframes stationaryGlow {
+  0% { opacity: 0.8; filter: drop-shadow(0 0 6px #ffbc00); }
+  100% { opacity: 1; filter: drop-shadow(0 0 16px #ff4500); }
+}
+
+/* Birthday Wish Box Styling */
+.wish-card {
+  display: none;
+  max-width: 550px;
+  margin: 25px auto 0;
+  padding: 25px 30px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 182, 217, 0.3);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  animation: fadeInWish 1s ease forwards;
+}
+.wish-card.active {
+  display: block;
+}
+.wish-card h3 {
+  font-size: 28px;
+  color: #ffc2e2;
+  margin-bottom: 10px;
+}
+.wish-card p {
+  color: #e8dfe8;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 22px;
+  line-height: 1.6;
+}
+
+@keyframes fadeInWish {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.timeline{position:relative;margin:30px auto;max-width:850px}
+.timeline:before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(#ff91ca,transparent)}
+.memory{width:46%;padding:25px;margin:35px 0;position:relative}
+.memory:nth-child(even){margin-left:54%}
+.memory h3{font-size:30px;color:#ffc2e2;margin-bottom:8px}
+.memory p{color:#aaa2b1;line-height:1.7;font-size:14px}
+.dot{position:absolute;right:-9%;top:32px;width:17px;height:17px;border-radius:50%;background:#ff9dce;box-shadow:0 0 25px #ff74bb}
+.memory:nth-child(even) .dot{left:-9%}
+
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.love-card{height:210px;perspective:1000px;cursor:pointer}
+.card-inner{height:100%;transition:transform .7s;transform-style:preserve-3d;position:relative}
+.love-card.flipped .card-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:25px;padding:28px;
+display:flex;align-items:center;justify-content:center;text-align:center}
+.front{background:linear-gradient(145deg,rgba(255,150,205,.13),rgba(150,120,255,.08));border:1px solid rgba(255,255,255,.12)}
+.front span{font-family:"Cormorant Garamond";font-size:30px}
+.back{transform:rotateY(180deg);background:rgba(255,255,255,.09);border:1px solid rgba(255,190,225,.25);color:#e8dfe8;line-height:1.7}
+
+.single-showcase{
+  max-width:800px;
+  height:480px;
+  margin:0 auto;
+  border-radius:28px;
+  overflow:hidden;
+  position:relative;
+  background:linear-gradient(145deg,#2b1630,#121020);
+  border:1px solid rgba(255,255,255,.16);
+  transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1), height 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.single-showcase img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  position:absolute;
+  inset:0;
+  opacity:0;
+  transition:opacity 1.5s ease-in-out, transform 6s ease;
+}
+.single-showcase img.active{
+  opacity:1;
+  transform:scale(1.04);
+}
+.single-showcase .caption{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  padding:35px 25px 22px;
+  background:linear-gradient(transparent,rgba(0,0,0,.85));
+  font-size:15px;
+  letter-spacing:1px;
+  z-index:2;
+  pointer-events:none;
+  text-align:center;
+  color:#ffebf5;
+}
+
+.envelopes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.envelope{padding:35px 20px;text-align:center;cursor:pointer;transition:.4s}
+.envelope:hover{transform:translateY(-7px)}
+.env-icon{font-size:45px;margin-bottom:15px}
+.envelope h3{font-size:27px}.envelope p{font-size:11px;color:#9f97a8;margin-top:8px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(15px);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal.open{display:flex}
+.letter{max-width:650px;padding:45px;text-align:center;position:relative}
+.letter h2{font-size:48px;color:#ffc3e1;margin-bottom:25px}
+.letter p{line-height:2;color:#ddd3df;font-family:"Cormorant Garamond";font-size:22px}
+.close{position:absolute;right:18px;top:15px;background:none;border:0;color:#fff;font-size:25px;cursor:pointer}
+
+.lock{text-align:center;padding:50px;max-width:600px;margin:auto}
+.lock input{width:100%;max-width:300px;padding:15px 18px;background:rgba(255,255,255,.06);border:1px solid #555;
+border-radius:12px;color:#fff;text-align:center;letter-spacing:6px;margin:15px 0 20px 0;outline:none}
+.secret{display:none}.secret.unlocked{display:block}
+
+/* Secret Unlocked Image Card */
+.secret-img-wrapper {
+  max-width: 500px;
+  margin: 25px auto 30px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 45px rgba(255, 105, 180, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+}
+.secret-img-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.secret-img-wrapper img:hover {
+  transform: scale(1.03);
+}
+
+.final h2{font-size:clamp(60px,10vw,120px)}
+.final p{color:#b9b0bf;line-height:2;max-width:650px;margin:20px auto}
+
+#hearts{position:fixed;inset:0;pointer-events:none;z-index:40}
+.heart{position:absolute;animation:float 4s ease-out forwards;font-size:20px}
+@keyframes float{0%{transform:translateY(20px) scale(.5);opacity:0}15%{opacity:1}100%{transform:translateY(-110vh) rotate(30deg) scale(1.4);opacity:0}}
+
+@media(max-width:760px){
+ .cards,.envelopes{grid-template-columns:1fr}
+ .memory,.memory:nth-child(even){width:90%;margin-left:10%}
+ .timeline:before{left:3%}.dot,.memory:nth-child(even) .dot{left:-9%;right:auto}
+ .single-showcase{height:360px}.section{padding:55px 18px}
+}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas><div class="aurora"></div><div id="hearts"></div>
+
+<!-- Background Audio Element & Mute Button -->
+<audio id="birthdayAudio" loop preload="auto">
+  <source src="Morning_on_the_Porch.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+<button id="muteToggleBtn" onclick="toggleMute()">Mute Music</button>
+
+<section class="screen" id="home">
+  <div class="hero reveal">
+    <div class="kicker">Celebrating 23 Years of Parami ✨</div>
+    <h1 class="gradient">Happy 23rd Birthday,<br><span id="name">Parami</span> ❤️</h1>
+    <p class="subtitle" id="intro">Today marks 23 years of you bringing light into the world. I could have sent you a simple message... but you deserve an entire little universe.</p>
+    <button class="btn" onclick="document.getElementById('story').scrollIntoView()">Enter My World ✨</button>
+  </div>
+  <div class="scroll">SCROLL TO BEGIN ↓</div>
+</section>
+
+<section class="screen" id="story">
+<div class="section">
+  <div class="center reveal">
+    <div class="kicker">Chapter I</div>
+    <h2>Our Little Story</h2>
+    <p class="section-intro">Every relationship is made of tiny moments. These are the adventures and memories I would choose to keep forever.</p>
+  </div>
+  <div class="timeline">
+    <div class="memory glass reveal"><span class="dot"></span><h3>Our First Journey 🛕</h3><p>Visiting Sri Dalada Maligawa in Kandy and exploring all the nearby places together. That trip holds such a special place in my heart.</p></div>
+    <div class="memory glass reveal"><span class="dot"></span><h3>Watching a Film in Kandy 🎬</h3><p>Sharing popcorn, laughter, and watching a film together in Kandy — one of those cozy moments I always cherish.</p></div>
+    <div class="memory glass reveal"><span class="dot"></span><h3>Climbing Sigiriya 🏰</h3><p>Taking on the challenge of climbing Sigiriya together, surrounded by breathtaking views and wonderful conversation.</p></div>
+    <div class="memory glass reveal"><span class="dot"></span><h3>Galle Face Beach 🌊</h3><p>Strolling along Galle Face beach, listening to the waves crash, and enjoying the wonderful time by your side.</p></div>
+    <div class="memory glass reveal"><span class="dot"></span><h3>Today ❤️</h3><p>And now we are here — celebrating Parami's 23rd birthday and the person who means so much to me.</p></div>
+  </div>
+</div>
+</section>
+
+<section class="screen">
+<div class="section">
+  <div class="center reveal"><div class="kicker">Chapter II</div><h2>Things I Love About You</h2><p class="section-intro">Tap each card. There are little messages hiding behind them.</p></div>
+  <div class="cards">
+    <div class="love-card reveal" onclick="this.classList.toggle('flipped')"><div class="card-inner"><div class="face front"><span>Your Smile ✨</span></div><div class="face back">There is something about your smile that can make an ordinary moment feel special.</div></div></div>
+    <div class="love-card reveal" onclick="this.classList.toggle('flipped')"><div class="card-inner"><div class="face front"><span>Your Heart 💗</span></div><div class="face back">The kindness and warmth you carry with you are things I never want to take for granted.</div></div></div>
+    <div class="love-card reveal" onclick="this.classList.toggle('flipped')"><div class="card-inner"><div class="face front"><span>You ✨</span></div><div class="face back">Honestly, I could write a hundred cards and still not fit everything I love about you.</div></div></div>
+  </div>
+</div>
+</section>
+
+<section class="screen">
+<div class="section">
+  <div class="center reveal"><div class="kicker">Chapter III</div><h2>Our Memories</h2><p class="section-intro">A gentle stream of our moments together ❤️</p></div>
+  <div class="single-showcase glass reveal" id="showcase">
+    <div class="caption">Special Memories ✨</div>
+  </div>
+</div>
+</section>
+
+<section class="screen">
+<div class="section">
+  <div class="center reveal"><div class="kicker">Chapter IV</div><h2>Open When...</h2><p class="section-intro">Little letters for different versions of you.</p></div>
+  <div class="envelopes">
+    <div class="envelope glass reveal" onclick="openLetter('happy')"><div class="env-icon">💌</div><h3>You're Happy</h3><p>Open this little letter</p></div>
+    <div class="envelope glass reveal" onclick="openLetter('sad')"><div class="env-icon">🌙</div><h3>You Need Me</h3><p>Open this little letter</p></div>
+    <div class="envelope glass reveal" onclick="openLetter('miss')"><div class="env-icon">❤️</div><h3>You Miss Me</h3><p>Open this little letter</p></div>
+  </div>
+</div>
+</section>
+
+<section class="screen">
+<div class="section">
+  <div class="lock glass reveal">
+    <div class="kicker">A Secret Chapter</div><h2>🔐 One Last Secret</h2>
+    <p class="section-intro">What is the nickname I call you always?</p>
+    <input id="secretInput" type="text" placeholder="Enter nickname..." maxlength="20">
+    <br><button class="btn" onclick="unlock()">Unlock ❤️</button>
+    <p id="lockMsg" style="margin-top:15px;color:#d99abb;font-size:12px"></p>
+  </div>
+  <div class="secret center" id="secret">
+    <div class="section">
+      <div class="kicker">Unlocked</div>
+      <h2 class="gradient">You Found It ❤️</h2>
+      
+      <!-- Secret Unlocked Image -->
+      <div class="secret-img-wrapper glass">
+        <img src="images.jpg" alt="Special Memory" onerror="this.parentElement.style.display='none'">
+      </div>
+
+      <p class="section-intro">No matter how many surprises I put on this page, the real gift is simply getting to have you in my life.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- Make A Wish Section with Stationary Glow Candles -->
+<section class="screen">
+<div class="section center">
+  <div class="reveal">
+    <div class="kicker">The Birthday Moment</div>
+    <h2>Make A Wish 🎂</h2>
+    <p class="section-intro" id="wishInstruction">Light the candles to send your wish into the universe ❤️</p>
+  </div>
+  
+  <div class="cake-wrapper glass reveal">
+    <svg class="cake-svg" viewBox="0 0 400 350" xmlns="http://www.w3.org/2000/svg">
+      <!-- Plate -->
+      <ellipse cx="200" cy="300" rx="160" ry="25" fill="#e2c2f0" opacity="0.8"/>
+      <ellipse cx="200" cy="295" rx="145" ry="20" fill="#ffffff" opacity="0.9"/>
+      
+      <!-- Bottom Cake Tier -->
+      <path d="M 80,220 Q 200,240 320,220 L 320,285 Q 200,305 80,285 Z" fill="#ff7da7"/>
+      <ellipse cx="200" cy="220" rx="120" ry="18" fill="#ff9ebd"/>
+      <!-- Cream Dripping -->
+      <path d="M 80,220 Q 100,240 120,225 Q 140,245 160,225 Q 180,245 200,225 Q 220,245 240,225 Q 260,245 280,225 Q 300,240 320,220 Q 200,238 80,220 Z" fill="#fff3fa"/>
+
+      <!-- Middle Cake Tier -->
+      <path d="M 110,160 Q 200,178 290,160 L 290,220 Q 200,238 110,220 Z" fill="#e05297"/>
+      <ellipse cx="200" cy="160" rx="90" ry="14" fill="#ff85be"/>
+      <path d="M 110,160 Q 130,178 150,165 Q 170,180 190,165 Q 210,180 230,165 Q 250,180 270,165 Q 280,175 290,160 Q 200,175 110,160 Z" fill="#fff3fa"/>
+
+      <!-- Top Cake Tier -->
+      <path d="M 140,110 Q 200,125 260,110 L 260,160 Q 200,175 140,160 Z" fill="#b13382"/>
+      <ellipse cx="200" cy="110" rx="60" ry="10" fill="#f76db3"/>
+      <path d="M 140,110 Q 160,122 180,112 Q 200,124 220,112 Q 240,122 260,110 Q 200,120 140,110 Z" fill="#ffffff"/>
+
+      <!-- Strawberries & Decor -->
+      <circle cx="160" cy="106" r="6" fill="#ff3366"/>
+      <circle cx="200" cy="104" r="6" fill="#ff3366"/>
+      <circle cx="240" cy="106" r="6" fill="#ff3366"/>
+
+      <!-- Candle Wicks & Bodies -->
+      <!-- Left Candle -->
+      <rect x="168" y="70" width="6" height="35" rx="2" fill="#ffd166"/>
+      <line x1="171" y1="70" x2="171" y2="64" stroke="#555" stroke-width="2"/>
+      <!-- Center Candle -->
+      <rect x="197" y="65" width="6" height="38" rx="2" fill="#ff6b6b"/>
+      <line x1="200" y1="65" x2="200" y2="59" stroke="#555" stroke-width="2"/>
+      <!-- Right Candle -->
+      <rect x="226" y="70" width="6" height="35" rx="2" fill="#4ecdc4"/>
+      <line x1="229" y1="70" x2="229" y2="64" stroke="#555" stroke-width="2"/>
+
+      <!-- Stationary Flames -->
+      <g class="flame" id="flames">
+        <!-- Flame Left (Centered directly over Wick x=171, y=64) -->
+        <path d="M 171,64 C 163,52 171,42 171,42 C 171,42 179,52 171,64 Z" fill="#ff9f1c"/>
+        <path d="M 171,62 C 167,54 171,47 171,47 C 171,47 175,54 171,62 Z" fill="#ffe600"/>
+        
+        <!-- Flame Center (Centered directly over Wick x=200, y=59) -->
+        <path d="M 200,59 C 192,45 200,34 200,34 C 200,34 208,45 200,59 Z" fill="#ff9f1c"/>
+        <path d="M 200,57 C 196,48 200,40 200,40 C 200,40 204,48 200,57 Z" fill="#ffe600"/>
+        
+        <!-- Flame Right (Centered directly over Wick x=229, y=64) -->
+        <path d="M 229,64 C 221,52 229,42 229,42 C 229,42 237,52 229,64 Z" fill="#ff9f1c"/>
+        <path d="M 229,62 C 225,54 229,47 229,47 C 229,47 233,54 229,62 Z" fill="#ffe600"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Birthday Wish Container Revealed when Candles are Lit -->
+  <div class="wish-card" id="wishCard">
+    <h3>✨ My Birthday Wish For You ✨</h3>
+    <p>"May your 23rd year bring you endless laughter, peace in every moment, and all the success your gentle heart deserves. May every single one of your dreams come true!" ❤️</p>
+  </div>
+
+  <button class="btn" id="cakeBtn" style="margin-top:25px" onclick="celebrate()">Light The Candles ✨</button>
+</div>
+</section>
+
+<section class="screen final">
+<div class="section center reveal">
+  <div class="kicker">One final thing...</div>
+  <h2 class="gradient">Happy 23rd Birthday,<br>Parami ❤️</h2>
+  <p>I hope this year brings you beautiful moments, peaceful days, big dreams, and countless reasons to smile.</p>
+  <p>And if I get to be part of some of those moments, I'll be grateful.</p>
+  <br><button class="btn" onclick="makeHearts(80)">One More Surprise 💕</button>
+</div>
+</section>
+
+<div class="modal" id="modal"><div class="letter glass"><button class="close" onclick="closeLetter()">×</button><h2 id="letterTitle"></h2><p id="letterText"></p></div></div>
+
+<script>
+const CONFIG={name:"Parami",secret:"chuty"};
+document.getElementById("name").textContent=CONFIG.name;
+
+/* Audio Control Script with Browser Autoplay Bypass */
+const audio = document.getElementById('birthdayAudio');
+const muteBtn = document.getElementById('muteToggleBtn');
+let audioStarted = false;
+
+function toggleMute() {
+  if (audio.muted) {
+    audio.muted = false;
+    audio.play().catch(() => {});
+    muteBtn.textContent = "Mute Music";
+  } else {
+    audio.muted = true;
+    muteBtn.textContent = "Unmute Music";
+  }
+}
+
+// Automatically start playing on the first click anywhere on the page
+document.addEventListener('click', () => {
+  if (!audioStarted) {
+    audio.muted = false;
+    audio.play().then(() => {
+      audioStarted = true;
+      muteBtn.textContent = "Mute Music";
+    }).catch(() => {});
+  }
+}, { once: true });
+
+// Attempt regular autoplay on load
+window.addEventListener('DOMContentLoaded', () => {
+  audio.play().then(() => {
+    audioStarted = true;
+    audio.muted = false;
+    muteBtn.textContent = "Mute Music";
+  }).catch(() => {
+    audio.muted = true;
+    muteBtn.textContent = "Unmute Music";
+  });
+});
+
+/* Gallery Showcase */
+const photos = [
+  "WhatsApp Image 2026-09-21 at 14.48.435.jpeg",
+  "WhatsApp Image 2026-09-21 at 14.48.434.jpeg",
+  "WhatsApp Image 2026-09-21 at 14.48.432.jpeg",
+  "WhatsApp Image 2026-09-21 at 14.48.42.jpeg",
+  "WhatsApp Image 2026-09-21 at 14.48.43.jpeg",
+  "WhatsApp Image 2026-09-21 at 14.50.33.jpeg",
+  "WhatsApp Image 2026-09-21 at 14.50.34.jpeg",
+  "WhatsApp Image 2026-09-21 at 14.50.35.jpeg"
+];
+
+function initUnifiedShowcase() {
+  const showcase = document.getElementById('showcase');
+  if (!photos.length) return;
+
+  function adjustShowcaseSize(imgElement) {
+    const maxWidth = Math.min(800, window.innerWidth - 40);
+    const maxHeight = 500;
+    const aspect = imgElement.naturalWidth / imgElement.naturalHeight || (16 / 9);
+
+    let newWidth = maxWidth;
+    let newHeight = newWidth / aspect;
+
+    if (newHeight > maxHeight) {
+      newHeight = maxHeight;
+      newWidth = newHeight * aspect;
+    }
+
+    showcase.style.width = `${Math.round(newWidth)}px`;
+    showcase.style.height = `${Math.round(newHeight)}px`;
+  }
+
+  photos.forEach((src, idx) => {
+    let img = document.createElement('img');
+    img.src = src;
+    img.onerror = () => { img.style.display = 'none'; };
+    if (idx === 0) img.classList.add('active');
+    
+    img.onload = () => {
+      if (idx === 0) adjustShowcaseSize(img);
+    };
+
+    showcase.insertBefore(img, showcase.firstChild);
+  });
+
+  let currentIdx = 0;
+
+  setInterval(() => {
+    let imgs = showcase.querySelectorAll('img');
+    if (imgs.length <= 1) return;
+
+    imgs[currentIdx]?.classList.remove('active');
+    currentIdx = (currentIdx + 1) % imgs.length;
+    const nextImg = imgs[currentIdx];
+    nextImg?.classList.add('active');
+
+    if (nextImg && nextImg.complete && nextImg.naturalWidth) {
+      adjustShowcaseSize(nextImg);
+    }
+  }, 3500);
+}
+initUnifiedShowcase();
+
+const canvas=document.getElementById("stars"),ctx=canvas.getContext("2d");
+let stars=[];
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight;stars=Array.from({length:180},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.7+.2,a:Math.random()}))}
+resize();addEventListener("resize",resize);
+function starLoop(){
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+ stars.forEach(s=>{s.a+=.015;ctx.globalAlpha=.25+.5*Math.abs(Math.sin(s.a));ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill()});
+ requestAnimationFrame(starLoop)
+} starLoop();
+
+const observer=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add("show")}),{threshold:.12});
+document.querySelectorAll(".reveal").forEach(e=>observer.observe(e));
+
+function makeHearts(n=25){
+ for(let i=0;i<n;i++){let h=document.createElement("div");h.className="heart";h.textContent=["❤️","💗","💖","✨","💕"][Math.floor(Math.random()*5)];
+ h.style.left=Math.random()*100+"vw";h.style.bottom="-30px";h.style.animationDelay=Math.random()*1.5+"s";h.style.fontSize=(14+Math.random()*25)+"px";document.getElementById("hearts").appendChild(h);
+ setTimeout(()=>h.remove(),5500)}
+}
+setInterval(()=>makeHearts(1),1800);
+
+const letters={
+ happy:["For Your Happy Days","When you're happy, I hope you know how beautiful that happiness looks on you. Keep smiling. The world needs that smile. ❤️"],
+ sad:["For The Days You Need Me","If today feels heavy, remember that you don't have to carry everything alone. Take a breath. Be gentle with yourself. And remember there is someone here who cares about you deeply. 🌙"],
+ miss:["For When You Miss Me","If you're reading this because you miss me, then consider this a tiny virtual hug. Close your eyes for a second and remember one of our favorite moments. I'll be thinking of you too. ❤️"]
+};
+function openLetter(k){document.getElementById("letterTitle").textContent=letters[k][0];document.getElementById("letterText").textContent=letters[k][1];document.getElementById("modal").classList.add("open")}
+function closeLetter(){document.getElementById("modal").classList.remove("open")}
+
+function unlock(){
+ let v=document.getElementById("secretInput").value.trim().toLowerCase();
+ if(v===CONFIG.secret){document.getElementById("secret").classList.add("unlocked");document.getElementById("lockMsg").textContent="Unlocked ✨";makeHearts(35)}
+ else document.getElementById("lockMsg").textContent="Not quite... try again ❤️";
+}
+
+let isLit = false;
+function celebrate(){
+ const flames = document.getElementById("flames");
+ const wishCard = document.getElementById("wishCard");
+ 
+ if(!isLit){
+  isLit = true;
+  flames.classList.add("lit");
+  wishCard.classList.add("active");
+  document.getElementById("wishInstruction").textContent = "Your wish is glowing bright in the universe! ✨";
+  document.getElementById("cakeBtn").textContent = "Blow The Candles ✨";
+  makeHearts(50);
+  fireworks();
+ } else {
+  isLit = false;
+  flames.classList.remove("lit");
+  wishCard.classList.remove("active");
+  document.getElementById("wishInstruction").textContent = "Light the candles to send your wish into the universe ❤️";
+  document.getElementById("cakeBtn").textContent = "Light The Candles ✨";
+  makeHearts(20);
+ }
+}
+
+function fireworks(){
+ for(let i=0;i<35;i++){let h=document.createElement("div");h.textContent="✨";h.style.position="fixed";h.style.left="50%";h.style.top="50%";h.style.zIndex=60;h.style.fontSize="22px";h.style.transition="1.2s";document.body.appendChild(h);
+ setTimeout(()=>{h.style.transform=`translate(${(Math.random()-.5)*700}px,${(Math.random()-.5)*500}px) scale(1.8)`;h.style.opacity=0},30);setTimeout(()=>h.remove(),1500)}
+}
+</script>
+</body>
+</html>
